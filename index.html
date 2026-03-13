@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>amruv — Coming Soon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Overpass+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f2ed;
+      --fg: #1a1612;
+      --accent: #c8a96e;
+      --muted: #9a9088;
+      --line: rgba(26, 22, 18, 0.12);
+      --glow: rgba(200, 169, 110, 0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e0c0a;
+        --fg: #f0ebe3;
+        --accent: #c8a96e;
+        --muted: #6b6358;
+        --line: rgba(240, 235, 227, 0.08);
+        --glow: rgba(200, 169, 110, 0.08);
+      }
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Overpass Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* Radial glow behind content */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .wordmark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(4rem, 14vw, 9rem);
+      letter-spacing: 0.18em;
+      color: var(--fg);
+      line-height: 1;
+      margin-bottom: 0.2em;
+      animation: fadeUp 1s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .wordmark span {
+      color: var(--accent);
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: var(--accent);
+      margin: 1.6rem auto;
+      opacity: 0.7;
+      animation: expandWidth 1s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .tagline {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 3rem;
+      animation: fadeUp 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .status {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      animation: fadeUp 1s 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    /* Corner marks */
+    .corner {
+      position: fixed;
+      width: 24px;
+      height: 24px;
+      opacity: 0.25;
+      animation: fadeIn 1.5s 1s ease both;
+    }
+
+    .corner--tl { top: 24px; left: 24px; border-top: 1px solid var(--fg); border-left: 1px solid var(--fg); }
+    .corner--tr { top: 24px; right: 24px; border-top: 1px solid var(--fg); border-right: 1px solid var(--fg); }
+    .corner--bl { bottom: 24px; left: 24px; border-bottom: 1px solid var(--fg); border-left: 1px solid var(--fg); }
+    .corner--br { bottom: 24px; right: 24px; border-bottom: 1px solid var(--fg); border-right: 1px solid var(--fg); }
+
+    /* Horizontal rule lines */
+    .rule {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--line);
+      animation: fadeIn 1.5s 1s ease both;
+    }
+    .rule--top { top: 60px; }
+    .rule--bottom { bottom: 60px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes expandWidth {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+  </style>
+</head>
+<body>
+  <div class="corner corner--tl"></div>
+  <div class="corner corner--tr"></div>
+  <div class="corner corner--bl"></div>
+  <div class="corner corner--br"></div>
+  <div class="rule rule--top"></div>
+  <div class="rule rule--bottom"></div>
+
+  <div class="container">
+    <h1 class="wordmark">amruv</h1>
+    <div class="divider"></div>
+    <p class="tagline">Something is on its way.</p>
+    <div class="status">
+      <span class="status-dot"></span>
+      <span>Coming Soon</span>
+    </div>
+  </div>
+</body>
+</html>
